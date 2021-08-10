@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/details_container"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/details_userImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_24" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/details_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@id/details_userImage"
+        app:layout_constraintTop_toTopOf="@id/details_userImage">
+
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/details_lastName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/details_userImage"
+        app:layout_constraintTop_toBottomOf="@id/details_name">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_userImage">
+
+    </androidx.appcompat.widget.AppCompatButton>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
