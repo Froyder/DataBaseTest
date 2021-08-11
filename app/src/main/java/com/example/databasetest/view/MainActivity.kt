@@ -3,6 +3,7 @@ package com.example.databasetest.view
 import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.databasetest.database.AppDatabase
 import com.example.databasetest.CustomRecyclerAdapter
+import com.example.databasetest.Helper
 import com.example.databasetest.R
 import com.example.databasetest.ViewModel
 import com.example.databasetest.database.User
@@ -52,10 +54,28 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().replace(R.id.main_container, AddFragment())
                 .addToBackStack("")
                 .commit()
-        } //обновляем список
-        
+        }
+
+        //обновляем список c примененным фильтром
         show.setOnClickListener(){
-            this.recreate()
+            var userList : List<User> = listOf()
+            var noEmptyNames : List<User> = ArrayList()
+
+            val dbThread = Thread {
+                userList = db.userDao().getAll()
+                //заполняем новый спискок с фильтром (имена "неПустые")
+                noEmptyNames = userList.filter { it.name.isNotEmpty() }
+                //noEmptyNames = userList.filter { it.name.contains("Ass") }
+
+            }
+            dbThread.start()
+            dbThread.join()
+
+            //устанавливаем список только с заполненными именами
+            recyclerView.adapter = CustomRecyclerAdapter(noEmptyNames, this)
+
+            //выводим сообщение из функции объекта Helper
+            Toast.makeText(this, Helper.testFilter(), Toast.LENGTH_SHORT).show()
         }
 
         //удаляем все записи из списка
@@ -68,6 +88,9 @@ class MainActivity : AppCompatActivity() {
             }.start()
 
             recyclerView.adapter = CustomRecyclerAdapter(userList, this)
+
+            //выводим сообщение из функции объекта Helper
+            Toast.makeText(this, Helper.testDelete(), Toast.LENGTH_SHORT).show()
         }
     }
 
