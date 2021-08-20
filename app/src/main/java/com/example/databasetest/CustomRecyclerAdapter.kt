@@ -11,17 +11,18 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.example.databasetest.database.AppDatabase
 import com.example.databasetest.database.User
 import com.example.databasetest.view.DetailsFragment
+import com.example.databasetest.view.MainActivity
+import com.example.databasetest.view.MyDialogFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class CustomRecyclerAdapter(private val names: List<User>, context : Activity) :
+class CustomRecyclerAdapter(private val names: List<User>) :
                                     RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
 
-    //регистрируем фрагмент менеджер из context (необязательный параметр, добавлен только ради ФМ)
-    val fm: FragmentManager = (context as FragmentActivity).supportFragmentManager
-    val tV : TextView = (context as FragmentActivity).statusTV
+    var onUserSelectedCallback : UserSelectedCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView =
@@ -31,30 +32,20 @@ class CustomRecyclerAdapter(private val names: List<User>, context : Activity) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.userTV?.text = names[position].toString()
+        val id = names[position].id
+        val name = names[position].name
+        val lastName = names[position].lastName
+        holder.userTV?.text = "ID $id, Name - $name, Last Name - $lastName"
 
-        //временный(?) листенер
         holder.userTV?.setOnClickListener {
-
-            //выводим Тоаст из контекста вьюхи
-            Toast.makeText(holder.itemView.context, names[position].toString(), Toast.LENGTH_SHORT).show()
-
-            //открываем фрагмент с подробностями, передаем данные о выбранном пользователе (names[position])
-            fm.beginTransaction().replace(R.id.main_container, DetailsFragment(names[position]))
-                .addToBackStack("")
-                .commit()
-
-            //дублируем позицию в логе
-            Log.d("RecyclerView", "onClick：" + position)
+            onUserSelectedCallback?.onUserSelected(names[position])
         }
 
         //слушатель долгого нажатия
         holder.userTV?.setOnLongClickListener(){
-            tV.text = names[position].toString()
-            holder.userTV?.setTextColor(Color.BLUE)
+            onUserSelectedCallback?.onUserLongSelected(names[position])
             true
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -67,6 +58,11 @@ class CustomRecyclerAdapter(private val names: List<User>, context : Activity) :
         init {
             userTV = itemView.findViewById(R.id.userTV)
         }
+    }
+
+    interface UserSelectedCallback {
+        fun onUserSelected(user: User)
+        fun onUserLongSelected(user: User)
     }
 
 }

@@ -17,9 +17,6 @@ import kotlinx.android.synthetic.main.activity_main.add
 import kotlinx.android.synthetic.main.add_note_layout.*
 import androidx.core.content.ContextCompat.getSystemService
 
-
-
-
 class AddFragment : Fragment() {
 
     override fun onCreateView(
